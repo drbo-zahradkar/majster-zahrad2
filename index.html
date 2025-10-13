@@ -1,7 +1,10 @@
   <script src="assets/data.js" defer></script>
   <script src="assets/script.js" defer></script>
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    const yearEl = document.getElementById('year');
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear();
+    }
   </script>
 
   <!-- GPT Chat Widget -->
@@ -14,8 +17,8 @@
   </div>
 
   <script>
-    // ⚠️ Sem vlož svoj API key len ak testuješ lokálne
-    const GPT_API_KEY = "TU_VLOZ_SVOJ_API_KEY";
+    // ⚠️ Sem vlož svoj API key len pri lokálnom testovaní (nikdy na verejný web)
+    const GPT_API_KEY = "SEM_DAJ_SVOJ_API_KEY";
 
     const gptMessages = document.getElementById('gpt-messages');
     const gptInput = document.getElementById('gpt-input');

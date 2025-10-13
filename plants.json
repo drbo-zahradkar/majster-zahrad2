@@ -1,0 +1,6 @@
+[
+  { "name": "Levanduľa", "latin": "Lavandula angustifolia", "img": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Lavandula_angustifolia_02.jpg" },
+  { "name": "Bazalka", "latin": "Ocimum basilicum", "img": "https://upload.wikimedia.org/wikipedia/commons/5/58/Basil-Basilico-Ocimum_basilicum-albahaca.jpg" },
+  { "name": "Materina dúška", "latin": "Thymus serpyllum", "img": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Thymus_serpyllum0.jpg" },
+  { "name": "Ruža", "latin": "Rosa", "img": "https://upload.wikimedia.org/wikipedia/commons/5/56/Rose_Red_Beauty.jpg" }
+]

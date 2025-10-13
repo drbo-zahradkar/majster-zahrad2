@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.jpg" type="image/jpeg">
+  <title>Karel – záhradník</title>
+  <meta name="description" content="Karel, tvoj digitálny záhradník a poradca.">
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    body {
+      background: #f9f9f9;
+      font-family: system-ui;
+    }
+    .chat-container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #4caf50;
+      color: white;
+      padding: 12px;
+    }
+    .chat-header #gpt-avatar {
+      font-size: 28px;
+    }
+    .chat-header #gpt-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    #gpt-messages {
+      height: 400px;
+      overflow-y: auto;
+      padding: 15px;
+    }
+    .msg {
+      margin: 10px 0;
+      padding: 10px 12px;
+      border-radius: 8px;
+      max-width: 80%;
+      white-space: pre-wrap;
+    }
+    .msg.user {
+      background: #d1e7dd;
+      margin-left: auto;
+      text-align: right;
+    }
+    .msg.bot {
+      background: #e8f5e9;
+      text-align: left;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    #gpt-input {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+    #gpt-send {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 0 20px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="logo" href="index.html" aria-label="Domov – Majster záhrady">
+      <span class="logo-mark" aria-hidden="true">🌱</span>
+      <span class="logo-text">Majster záhrady</span>
+    </a>
+    <nav class="site-nav" aria-label="Hlavná navigácia">
+      <a href="plants.html">Encyklopédia</a>
+      <a href="tips.html">Sezónne tipy</a>
+      <a href="planner.html">Plánovač</a>
+      <a href="quiz.html">Kvíz</a>
+      <a href="karel.html" aria-current="page">👨‍🌾 Karel</a>
+    </nav>
+    <div class="controls">
+      <button class="btn text" aria-label="Prepínač motívu">🌓</button>
+      <button class="btn text" aria-label="Zmeniť farby">🎨</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="chat-container">
+      <div class="chat-header">
+        <div id="gpt-avatar">🧑‍🌾</div>
+        <div id="gpt-name">Karel – záhradník</div>
+      </div>
+      <div id="gpt-messages">
+        <div class="msg bot">Ahoj, ja som Karel. Spýtaj sa ma na čokoľvek o záhrade 🌿</div>
+      </div>
+      <div class="chat-input">
+        <input id="gpt-input" type="text" placeholder="Napíš otázku pre Karla...">
+        <button id="gpt-send">→</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> Majster záhrady · Karel má rád kompost a levanduľu.</p>
+  </footer>
+
+  <script>
+    // Rok vo footeri
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // 🧑‍🌾 Karel – Chatbot
+    const GPT_API_KEY = "SEM_DAJ_SVOJ_API_KEY"; // nikdy nezverejňuj skutočný kľúč
+    const gptMessages = document.getElementById('gpt-messages');
+    const gptInput = document.getElementById('gpt-input');
+    const gptSendBtn = document.getElementById('gpt-send');
+
+    gptSendBtn.addEventListener('click', gptSend);
+    gptInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') gptSend();
+    });
+
+    async function gptSend() {
+      const text = gptInput.value.trim();
+      if (!text) return;
+      addGPTMessage(text, 'user');
+      gptInput.value = '';
+
+      try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${GPT_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-5",
+            messages: [
+              { role: "system", content: "Si Karel, priateľský záhradník. Odpovedaj jednoducho, s humorom, ale odborne." },
+              { role: "user", content: text }
+            ]
+          })
+        });
+
+        if (!res.ok) {
+          addGPTMessage("Nepodarilo sa spojiť so serverom. Asi zalievam rajčiny...", 'bot');
+          return;
+        }
+
+        const data = await res.json();
+        const reply = data.choices[0].message.content;
+        addGPTMessage(reply, 'bot');
+      } catch (err) {
+        addGPTMessage("Ups. Vyzerá to, že som sa zamotal v hadici 💧", 'bot');
+      }
+    }
+
+    function addGPTMessage(text, who) {
+      const msg = document.createElement('div');
+      msg.className = `msg ${who}`;
+      msg.textContent = text;
+      gptMessages.appendChild(msg);
+      gptMessages.scrollTop = gptMessages.scrollHeight;
+    }
+  </script>
+</body>
+</html>

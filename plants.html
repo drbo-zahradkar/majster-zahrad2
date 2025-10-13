@@ -7,37 +7,67 @@
   <title>Encyklopédia rastlín – Majster záhrady</title>
   <link rel="stylesheet" href="assets/styles.css" />
   <style>
-    body { background: #f8f8f8; }
-    .plant-card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      overflow: hidden;
+    :root {
+      --accent: #f7931e; /* oranžová */
+      --bg: #fdfbf7;
+      --card-bg: #ffffff;
+      --text: #333;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    body {
+      background: var(--bg);
+      font-family: system-ui, sans-serif;
+      color: var(--text);
+      transition: background 0.3s ease;
+    }
+
+    header.site-header {
+      background: var(--accent);
+      padding: 12px 20px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
     }
-    .plant-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
+    .site-header .logo-text { font-weight: 700; }
+    .site-nav a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.2s;
     }
-    .plant-card h3 {
-      margin: 8px 10px 0;
-      font-size: 1.1em;
+    .site-nav a:hover,
+    .site-nav a[aria-current="page"] {
+      background: rgba(255,255,255,0.2);
     }
-    .plant-card .latin {
-      margin: 0 10px 10px;
-      font-size: 0.9em;
-      color: #555;
-      font-style: italic;
+
+    h1 {
+      color: var(--accent);
+      margin-top: 20px;
     }
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-    }
+
+    /* Filtrovací panel */
     .filters {
-      margin: 15px 0;
+      background: white;
+      padding: 15px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      margin: 20px 0;
+    }
+    .filters input,
+    .filters select {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 15px;
+      transition: border 0.2s;
+    }
+    .filters input:focus,
+    .filters select:focus {
+      outline: none;
+      border-color: var(--accent);
     }
     .filter-row {
       display: flex;
@@ -45,9 +75,60 @@
       gap: 10px;
       margin-top: 10px;
     }
-    .filter-row select, .filter-row input {
-      flex: 1;
-      min-width: 180px;
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #e07800;
+    }
+
+    /* Karty */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .plant-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform: translateY(0);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .plant-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .plant-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .plant-card h3 {
+      margin: 10px 12px 4px;
+      font-size: 1.15em;
+      color: var(--accent);
+    }
+    .plant-card .latin {
+      margin: 0 12px 12px;
+      font-size: 0.9em;
+      color: #666;
+      font-style: italic;
+    }
+
+    footer.site-footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
     }
   </style>
 </head>
@@ -70,7 +151,7 @@
 <main class="container">
   <header class="page-head">
     <h1>Encyklopédia rastlín</h1>
-    <p>Filtrovanie podľa svetla, vody a náročnosti. Vyhľadávanie funguje v reálnom čase.</p>
+    <p>Vyhľadávaj, filtruj a objavuj krásy botanického chaosu.</p>
   </header>
 
   <section class="filters" aria-label="Filtre rastlín">
@@ -111,10 +192,8 @@
 
   const list = document.getElementById('plantList');
   const searchInput = document.getElementById('plantSearch');
-
   let plants = [];
 
-  // SPARQL dotaz na Wikidata
   const query = `
     SELECT ?item ?itemLabel ?latinLabel ?image WHERE {
       ?item wdt:P31/wdt:P279* wd:Q16521.
@@ -131,7 +210,7 @@
       plants = data.results.bindings.map(p => ({
         name: p.itemLabel.value,
         latin: p.latinLabel ? p.latinLabel.value : "—",
-        img: p.image ? p.image.value : "https://via.placeholder.com/300x200?text=Bez+obrázka",
+        img: p.image ? p.image.value : "https://via.placeholder.com/300x200/FFF3E0/333?text=Bez+obrázka"
       }));
       renderPlants(plants);
     })

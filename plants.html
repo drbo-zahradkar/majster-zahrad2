@@ -1,74 +1,176 @@
 <!doctype html>
 <html lang="sk">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" href="favicon.jpg" type="image/jpg+xml">
-<title>Encyklopédia rastlín – Majster záhrady</title>
-<link rel="stylesheet" href="assets/styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="favicon.jpg" type="image/jpg+xml">
+  <title>Encyklopédia rastlín – Majster záhrady</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>
+    body { background: #f8f8f8; }
+    .plant-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .plant-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .plant-card h3 {
+      margin: 8px 10px 0;
+      font-size: 1.1em;
+    }
+    .plant-card .latin {
+      margin: 0 10px 10px;
+      font-size: 0.9em;
+      color: #555;
+      font-style: italic;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    .filters {
+      margin: 15px 0;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .filter-row select, .filter-row input {
+      flex: 1;
+      min-width: 180px;
+    }
+  </style>
 </head>
 <body data-page="plants">
 <header class="site-header">
-<a class="logo" href="index.html"><span class="logo-mark">🌱</span><span class="logo-text">Majster záhrady</span></a>
-<nav class="site-nav">
-<a href="plants.html" aria-current="page">Encyklopédia</a>
-<a href="tips.html">Sezónne tipy</a>
-<a href="planner.html">Plánovač</a>
-<a href="quiz.html">Kvíz</a>
-<a href="karel.html">Karel</a>
-</nav>
-<div class="controls">
-<button class="btn ghost" id="themeToggle" aria-pressed="false">🌓</button>
-<button class="btn ghost" id="accentCycle">🎨</button>
-</div>
+  <a class="logo" href="index.html"><span class="logo-mark">🌱</span><span class="logo-text">Majster záhrady</span></a>
+  <nav class="site-nav">
+    <a href="plants.html" aria-current="page">Encyklopédia</a>
+    <a href="tips.html">Sezónne tipy</a>
+    <a href="planner.html">Plánovač</a>
+    <a href="quiz.html">Kvíz</a>
+    <a href="karel.html">Karel</a>
+  </nav>
+  <div class="controls">
+    <button class="btn ghost" id="themeToggle" aria-pressed="false">🌓</button>
+    <button class="btn ghost" id="accentCycle">🎨</button>
+  </div>
 </header>
-
 
 <main class="container">
-<header class="page-head">
-<h1>Encyklopédia rastlín</h1>
-<p>Filtrovanie podľa svetla, vody a náročnosti. Vyhľadávanie funguje v reálnom čase.</p>
-</header>
+  <header class="page-head">
+    <h1>Encyklopédia rastlín</h1>
+    <p>Filtrovanie podľa svetla, vody a náročnosti. Vyhľadávanie funguje v reálnom čase.</p>
+  </header>
 
+  <section class="filters" aria-label="Filtre rastlín">
+    <input id="plantSearch" class="input" type="search" placeholder="Hľadaj názov, latinský názov alebo tagy…" />
+    <div class="filter-row">
+      <select id="filterSun" class="select" aria-label="Filter slnko">
+        <option value="">Svetlo (všetko)</option>
+        <option value="slnečné">Slnečné</option>
+        <option value="polotieň">Polotieň</option>
+        <option value="tieň">Tieň</option>
+      </select>
+      <select id="filterWater" class="select" aria-label="Filter zálievka">
+        <option value="">Zálievka (všetko)</option>
+        <option value="nízka">Nízka</option>
+        <option value="stredná">Stredná</option>
+        <option value="vysoká">Vysoká</option>
+      </select>
+      <select id="filterDifficulty" class="select" aria-label="Filter náročnosť">
+        <option value="">Náročnosť (všetko)</option>
+        <option value="ľahká">Ľahká</option>
+        <option value="stredná">Stredná</option>
+        <option value="náročná">Náročná</option>
+      </select>
+      <button id="resetFilters" class="btn">Reset</button>
+    </div>
+  </section>
 
-<section class="filters" aria-label="Filtre rastlín">
-<input id="plantSearch" class="input" type="search" placeholder="Hľadaj názov, latinský názov alebo tagy…" />
-<div class="filter-row">
-<select id="filterSun" class="select" aria-label="Filter slnko">
-<option value="">Svetlo (všetko)</option>
-<option value="slnečné">Slnečné</option>
-<option value="polotieň">Polotieň</option>
-<option value="tieň">Tieň</option>
-</select>
-<select id="filterWater" class="select" aria-label="Filter zálievka">
-<option value="">Zálievka (všetko)</option>
-<option value="nízka">Nízka</option>
-<option value="stredná">Stredná</option>
-<option value="vysoká">Vysoká</option>
-</select>
-<select id="filterDifficulty" class="select" aria-label="Filter náročnosť">
-<option value="">Náročnosť (všetko)</option>
-<option value="ľahká">Ľahká</option>
-<option value="stredná">Stredná</option>
-<option value="náročná">Náročná</option>
-</select>
-<button id="resetFilters" class="btn">Reset</button>
-</div>
-</section>
-
-
-<section id="plantList" class="cards-grid" aria-live="polite"></section>
+  <section id="plantList" class="cards-grid" aria-live="polite">
+    <p>Načítavam rastliny… 🌿</p>
+  </section>
 </main>
-
 
 <footer class="site-footer"><p>© <span id="year"></span> Majster záhrady</p></footer>
 
+<script>
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-<script src="assets/data.js"></script>
-<script src="assets/script.js"></script>
+  const list = document.getElementById('plantList');
+  const searchInput = document.getElementById('plantSearch');
+
+  let plants = [];
+
+  // SPARQL dotaz na Wikidata
+  const query = `
+    SELECT ?item ?itemLabel ?latinLabel ?image WHERE {
+      ?item wdt:P31/wdt:P279* wd:Q16521.
+      OPTIONAL { ?item wdt:P225 ?latinLabel. }
+      OPTIONAL { ?item wdt:P18 ?image. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "sk,en". }
+    }
+    LIMIT 50
+  `;
+
+  fetch("https://query.wikidata.org/sparql?query=" + encodeURIComponent(query) + "&format=json")
+    .then(res => res.json())
+    .then(data => {
+      plants = data.results.bindings.map(p => ({
+        name: p.itemLabel.value,
+        latin: p.latinLabel ? p.latinLabel.value : "—",
+        img: p.image ? p.image.value : "https://via.placeholder.com/300x200?text=Bez+obrázka",
+      }));
+      renderPlants(plants);
+    })
+    .catch(err => {
+      console.error(err);
+      list.innerHTML = "<p>Nepodarilo sa načítať rastliny 😢</p>";
+    });
+
+  function renderPlants(data) {
+    list.innerHTML = '';
+    if (data.length === 0) {
+      list.innerHTML = '<p>Nenašli sa žiadne rastliny.</p>';
+      return;
+    }
+    data.forEach(plant => {
+      const card = document.createElement('div');
+      card.className = 'plant-card';
+      card.innerHTML = `
+        <img src="${plant.img}" alt="${plant.name}">
+        <h3>${plant.name}</h3>
+        <div class="latin">${plant.latin}</div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase();
+    const filtered = plants.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.latin.toLowerCase().includes(q)
+    );
+    renderPlants(filtered);
+  });
+
+  document.getElementById('resetFilters').addEventListener('click', () => {
+    searchInput.value = '';
+    renderPlants(plants);
+  });
+</script>
 </body>
-
 </html>
-
-
-

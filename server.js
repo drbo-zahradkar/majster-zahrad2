@@ -8,7 +8,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Endpoint pre správy z frontendu
 app.post("/chat", async (req, res) => {
   const { message } = req.body;
 
@@ -37,4 +36,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server beží na http://localhost:${PORT}`);
 });
-

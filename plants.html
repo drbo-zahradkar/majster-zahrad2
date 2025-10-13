@@ -9,6 +9,7 @@
   <style>
     :root {
       --accent: #f7931e; /* oranžová */
+      --green: #4caf50;
       --bg: #fdfbf7;
       --card-bg: #ffffff;
       --text: #333;
@@ -22,25 +23,31 @@
       transition: background 0.3s ease;
     }
 
+    /* NAVBAR s prechodom */
     header.site-header {
-      background: var(--accent);
+      background: linear-gradient(90deg, var(--accent) 0%, var(--green) 100%);
       padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
     }
-    .site-header .logo-text { font-weight: 700; }
+    .logo-text { font-weight: 700; }
+    .site-nav {
+      display: flex;
+      gap: 10px;
+    }
     .site-nav a {
       color: white;
       text-decoration: none;
-      padding: 6px 10px;
+      padding: 6px 12px;
       border-radius: 8px;
-      transition: background 0.2s;
+      transition: background 0.25s ease;
     }
     .site-nav a:hover,
     .site-nav a[aria-current="page"] {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
     }
 
     h1 {
@@ -48,7 +55,7 @@
       margin-top: 20px;
     }
 
-    /* Filtrovací panel */
+    /* Filtre */
     .filters {
       background: white;
       padding: 15px;

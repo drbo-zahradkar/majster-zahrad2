@@ -137,7 +137,7 @@
   let plants = [];
 
   // 🪴 Backend fetch namiesto Wikidata priamo
-  fetch("http://localhost:3000/plants")
+  fetch("plants.json")
     .then(res => res.json())
     .then(data => {
       plants = data;
@@ -215,3 +215,4 @@
 </script>
 </body>
 </html>
+

@@ -38,6 +38,7 @@
     }
     .filters {
       margin: 15px 0;
+      position: relative;
     }
     .filter-row {
       display: flex;
@@ -48,6 +49,27 @@
     .filter-row select, .filter-row input {
       flex: 1;
       min-width: 180px;
+    }
+    /* ▼ Autocomplete box ▼ */
+    .autocomplete-list {
+      position: absolute;
+      top: 45px;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 10;
+    }
+    .autocomplete-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+    .autocomplete-item:hover {
+      background: #f0f0f0;
     }
   </style>
 </head>
@@ -74,7 +96,8 @@
   </header>
 
   <section class="filters" aria-label="Filtre rastlín">
-    <input id="plantSearch" class="input" type="search" placeholder="Hľadaj názov, latinský názov alebo tagy…" />
+    <input id="plantSearch" class="input" type="search" placeholder="Hľadaj názov, latinský názov alebo tagy…" autocomplete="off" />
+    <div id="autocomplete" class="autocomplete-list" style="display:none;"></div>
     <div class="filter-row">
       <select id="filterSun" class="select" aria-label="Filter slnko">
         <option value="">Svetlo (všetko)</option>
@@ -111,10 +134,9 @@
 
   const list = document.getElementById('plantList');
   const searchInput = document.getElementById('plantSearch');
-
+  const autocompleteBox = document.getElementById('autocomplete');
   let plants = [];
 
-  // SPARQL dotaz na Wikidata
   const query = `
     SELECT ?item ?itemLabel ?latinLabel ?image WHERE {
       ?item wdt:P31/wdt:P279* wd:Q16521.
@@ -122,7 +144,7 @@
       OPTIONAL { ?item wdt:P18 ?image. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "sk,en". }
     }
-    LIMIT 50
+    LIMIT 100
   `;
 
   fetch("https://query.wikidata.org/sparql?query=" + encodeURIComponent(query) + "&format=json")
@@ -158,17 +180,50 @@
     });
   }
 
+  function showAutocomplete(suggestions) {
+    if (suggestions.length === 0) {
+      autocompleteBox.style.display = 'none';
+      return;
+    }
+    autocompleteBox.innerHTML = '';
+    suggestions.forEach(plant => {
+      const item = document.createElement('div');
+      item.className = 'autocomplete-item';
+      item.textContent = plant.name;
+      item.addEventListener('click', () => {
+        searchInput.value = plant.name;
+        renderPlants([plant]);
+        autocompleteBox.style.display = 'none';
+      });
+      autocompleteBox.appendChild(item);
+    });
+    autocompleteBox.style.display = 'block';
+  }
+
   searchInput.addEventListener('input', () => {
-    const q = searchInput.value.toLowerCase();
-    const filtered = plants.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      p.latin.toLowerCase().includes(q)
+    const q = searchInput.value.toLowerCase().trim();
+    if (q.length < 2) {
+      autocompleteBox.style.display = 'none';
+      renderPlants(plants);
+      return;
+    }
+    const suggestions = plants.filter(p =>
+      p.name.toLowerCase().startsWith(q) ||
+      p.latin.toLowerCase().startsWith(q)
     );
-    renderPlants(filtered);
+    showAutocomplete(suggestions);
+    renderPlants(suggestions);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!autocompleteBox.contains(e.target) && e.target !== searchInput) {
+      autocompleteBox.style.display = 'none';
+    }
   });
 
   document.getElementById('resetFilters').addEventListener('click', () => {
     searchInput.value = '';
+    autocompleteBox.style.display = 'none';
     renderPlants(plants);
   });
 </script>

@@ -83,15 +83,6 @@
     <p>© <span id="year"></span> Majster záhrady · Postavené s láskou k pôde a vede.</p>
   </footer>
 
-  <!-- ChatGPT Widget -->
-  <div id="gpt-box">
-    <div id="gpt-messages"></div>
-    <div>
-      <input id="gpt-input" type="text" placeholder="Napíš niečo...">
-      <button onclick="gptSend()">→</button>
-    </div>
-  </div>
-
   <script src="assets/data.js" defer></script>
   <script src="assets/script.js" defer></script>
   <script>
@@ -100,62 +91,6 @@
     if (yearEl) {
       yearEl.textContent = new Date().getFullYear();
     }
-
-    // ChatGPT API
-    const GPT_API_KEY = "SEM_DAJ_SVOJ_API_KEY"; // ⚠️ nikdy nedávaj skutočný kľúč na verejný web
-    const gptMessages = document.getElementById('gpt-messages');
-    const gptInput = document.getElementById('gpt-input');
-
-    async function gptSend() {
-      const text = gptInput.value.trim();
-      if (!text) return;
-      addGPTMessage(text, 'user');
-      gptInput.value = '';
-
-      try {
-        const res = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${GPT_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: "gpt-5",
-            messages: [{ role: "user", content: text }]
-          })
-        });
-
-        if (!res.ok) {
-          addGPTMessage("Chyba: Nepodarilo sa spojiť so serverom.", 'bot');
-          return;
-        }
-
-        const data = await res.json();
-        if (!data.choices || !data.choices[0].message) {
-          addGPTMessage("Chyba: žiadna odpoveď od AI.", 'bot');
-          return;
-        }
-
-        const reply = data.choices[0].message.content;
-        addGPTMessage(reply, 'bot');
-
-      } catch (err) {
-        addGPTMessage("Chyba pripojenia. Skús znova.", 'bot');
-      }
-    }
-
-    function addGPTMessage(text, who) {
-      const msg = document.createElement('div');
-      msg.className = `msg ${who}`;
-      msg.textContent = text;
-      gptMessages.appendChild(msg);
-      gptMessages.scrollTop = gptMessages.scrollHeight;
-    }
-
-    gptInput.addEventListener('keypress', e => {
-      if (e.key === 'Enter') gptSend();
-    });
   </script>
 </body>
 </html>
-

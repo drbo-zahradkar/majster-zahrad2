@@ -6,87 +6,108 @@
 <link rel="icon" href="favicon.jpg" type="image/jpg+xml">
 <title>Plánovač prác – Majster záhrady</title>
 <link rel="stylesheet" href="assets/styles.css" />
+<style>
+/* --- CENTROVANIE NAV BARU --- */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+}
+
+.site-nav {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  gap: 1.5rem;
+}
+
+.site-header .logo {
+  flex: 0;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+}
+</style>
 </head>
 <body data-page="planner">
 <header class="site-header">
-<a class="logo" href="index.html"><span class="logo-mark">🌱</span><span class="logo-text">Majster záhrady</span></a>
-<nav class="site-nav">
-<a href="plants.html">Encyklopédia</a>
-<a href="tips.html">Sezónne tipy</a>
-<a href="planner.html" aria-current="page">Plánovač</a>
-<a href="quiz.html">Kvíz</a>
-<a href="karel.html">Karel</a>
-</nav>
-<div class="controls">
-<button class="btn ghost" id="themeToggle">🌓</button>
-<button class="btn ghost" id="accentCycle">🎨</button>
-</div>
-</header>
+  <a class="logo" href="index.html">
+    <span class="logo-mark">🌱</span>
+    <span class="logo-text">Majster záhrady</span>
+  </a>
 
+  <nav class="site-nav">
+    <a href="plants.html">Encyklopédia</a>
+    <a href="tips.html">Sezónne tipy</a>
+    <a href="planner.html" aria-current="page">Plánovač</a>
+    <a href="quiz.html">Kvíz</a>
+    <a href="karel.html">Karel</a>
+  </nav>
+
+  <div class="controls">
+    <button class="btn ghost" id="themeToggle">🌓</button>
+    <button class="btn ghost" id="accentCycle">🎨</button>
+  </div>
+</header>
 
 <main class="container">
-<header class="page-head">
-<h1>Plánovač prác</h1>
-<p>Tvoje úlohy, termíny a checklisty – uložené v prehliadači.</p>
-</header>
+  <header class="page-head">
+    <h1>Plánovač prác</h1>
+    <p>Tvoje úlohy, termíny a checklisty – uložené v prehliadači.</p>
+  </header>
 
+  <section class="planner-form">
+    <label class="sr-only" for="taskInput">Úloha</label>
+    <input id="taskInput" class="input" placeholder="Zadaj úlohu (napr. Presadiť paradajky)" />
 
-<section class="planner-form">
-<label class="sr-only" for="taskInput">Úloha</label>
-<input id="taskInput" class="input" placeholder="Zadaj úlohu (napr. Presadiť paradajky)" />
+    <label class="sr-only" for="dateInput">Termín</label>
+    <input id="dateInput" class="input" type="date" />
 
+    <select id="categoryInput" class="select" aria-label="Kategória">
+      <option value="Všetko">Kategória</option>
+      <option>Výsev</option>
+      <option>Presádzanie</option>
+      <option>Zálievka</option>
+      <option>Hnojenie</option>
+      <option>Rez</option>
+      <option>Zber</option>
+      <option>Údržba</option>
+    </select>
 
-<label class="sr-only" for="dateInput">Termín</label>
-<input id="dateInput" class="input" type="date" />
+    <button id="addTask" class="btn primary">Pridať</button>
+    <button id="exportTasks" class="btn secondary">Export CSV</button>
+  </section>
 
+  <section class="filter-row">
+    <select id="filterCategory" class="select">
+      <option value="Všetko">Filtrovať podľa kategórie</option>
+      <option>Výsev</option>
+      <option>Presádzanie</option>
+      <option>Zálievka</option>
+      <option>Hnojenie</option>
+      <option>Rez</option>
+      <option>Zber</option>
+      <option>Údržba</option>
+    </select>
+    <button id="clearDone" class="btn">Vymazať hotové</button>
+    <button id="resetAll" class="btn danger">Reset všetkého</button>
+  </section>
 
-<select id="categoryInput" class="select" aria-label="Kategória">
-<option value="Všetko">Kategória</option>
-<option>Výsev</option>
-<option>Presádzanie</option>
-<option>Zálievka</option>
-<option>Hnojenie</option>
-<option>Rez</option>
-<option>Zber</option>
-<option>Údržba</option>
-</select>
-
-
-<button id="addTask" class="btn primary">Pridať</button>
-<button id="exportTasks" class="btn secondary">Export CSV</button>
-</section>
-
-
-<section class="filter-row">
-<select id="filterCategory" class="select">
-<option value="Všetko">Filtrovať podľa kategórie</option>
-<option>Výsev</option>
-<option>Presádzanie</option>
-<option>Zálievka</option>
-<option>Hnojenie</option>
-<option>Rez</option>
-<option>Zber</option>
-<option>Údržba</option>
-</select>
-<button id="clearDone" class="btn">Vymazať hotové</button>
-<button id="resetAll" class="btn danger">Reset všetkého</button>
-</section>
-
-
-<section>
-<ul id="taskList" class="task-list" aria-live="polite"></ul>
-</section>
+  <section>
+    <ul id="taskList" class="task-list" aria-live="polite"></ul>
+  </section>
 </main>
 
-
-<footer class="site-footer"><p>© <span id="year"></span> Majster záhrady</p></footer>
-
+<footer class="site-footer">
+  <p>© <span id="year"></span> Majster záhrady</p>
+</footer>
 
 <script src="assets/data.js"></script>
 <script src="assets/script.js"></script>
 </body>
-
 </html>
-
-
-

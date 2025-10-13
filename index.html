@@ -1,134 +1,74 @@
-<!doctype html>
-<html lang="sk">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="favicon.jpg" type="image/jpeg">
-  <title>Majster záhrady – Domov</title>
-  <meta name="description" content="Kompletná príručka pre modernú starostlivosť o záhradu – tipy, encyklopédia rastlín, plánovač a kvíz.">
-  <link rel="stylesheet" href="assets/styles.css">
-</head>
-
-<body data-page="home">
-  <header class="site-header">
-    <a class="logo" href="index.html" aria-label="Domov – Majster záhrady">
-      <span class="logo-mark" aria-hidden="true">🌱</span>
-      <span class="logo-text">Majster záhrady</span>
-    </a>
-    <nav class="site-nav" aria-label="Hlavná navigácia">
-      <a href="plants.html">Encyklopédia</a>
-      <a href="tips.html">Sezónne tipy</a>
-      <a href="planner.html">Plánovač</a>
-      <a href="quiz.html">Kvíz</a>
-    </nav>
-    <div class="controls">
-      <button class="btn text" aria-label="Prepínač motívu">🌓</button>
-      <button class="btn text" aria-label="Zmeniť farby">🎨</button>
-    </div>
-  </header>
-
-  <main class="container">
-    <section class="hero">
-      <h1>Vitaj v tvojej modernej <span class="accent">záhradnej dielni</span></h1>
-      <p>Praktické návody, encyklopédia rastlín, plánovač prác a kvízy. Pestré farby, čistý dizajn, žiadny balast.</p>
-      <div class="cta-row">
-        <a class="btn primary" href="plants.html">Preskúmať rastliny</a>
-        <a class="btn secondary" href="planner.html">Naplánovať sezónu</a>
-      </div>
-    </section>
-
-    <section class="cards-grid" aria-label="Rýchly prehľad">
-      <article class="card">
-        <h2>Encyklopédia rastlín</h2>
-        <p>Vyhľadávaj podľa slnka, zálievky a náročnosti. Získaj odporúčania pre záhon či balkón.</p>
-        <a class="btn link" href="plants.html">Prejsť →</a>
-      </article>
-
-      <article class="card">
-        <h2>Sezónne tipy</h2>
-        <p>Čo kedy sadiť, strihať a prihnojovať. Prehľad jar–leto–jeseň–zima v praxi.</p>
-        <a class="btn link" href="tips.html">Prejsť →</a>
-      </article>
-
-      <article class="card">
-        <h2>Plánovač prác</h2>
-        <p>Tvor úlohy, termíny a checklisty s uložením do prehliadača. Žiadne prázdne sľuby, len hotové záhony.</p>
-        <a class="btn link" href="planner.html">Prejsť →</a>
-      </article>
-
-      <article class="card">
-        <h2>Kvíz vedomostí</h2>
-        <p>Otestuj si znalosti – polievanie, pôda, rezy, škodcovia. Učiť sa môže byť hra.</p>
-        <a class="btn link" href="quiz.html">Prejsť →</a>
-      </article>
-    </section>
-
-    <section class="tips-inline">
-      <h2>Dnešný tip</h2>
-      <p id="dailyTip" class="lead" role="status">Načítavam…</p>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <p>© <span id="year"></span> Majster záhrady · Postavené s láskou k pôde a vede.</p>
-  </footer>
-
   <script src="assets/data.js" defer></script>
   <script src="assets/script.js" defer></script>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
-<!-- GPT Chat Widget -->
-<div id="gpt-box">
-  <div id="gpt-messages"></div>
-  <div>
-    <input id="gpt-input" type="text" placeholder="Napíš niečo...">
-    <button onclick="gptSend()">→</button>
+
+  <!-- GPT Chat Widget -->
+  <div id="gpt-box">
+    <div id="gpt-messages"></div>
+    <div>
+      <input id="gpt-input" type="text" placeholder="Napíš niečo...">
+      <button onclick="gptSend()">→</button>
+    </div>
   </div>
-</div>
 
-<script>
-  const GPT_API_KEY = "--------"; // svoj API key sem
-  const gptMessages = document.getElementById('gpt-messages');
-  const gptInput = document.getElementById('gpt-input');
+  <script>
+    // ⚠️ Sem vlož svoj API key len ak testuješ lokálne
+    const GPT_API_KEY = "TU_VLOZ_SVOJ_API_KEY";
 
-  async function gptSend() {
-    const text = gptInput.value.trim();
-    if (!text) return;
-    addGPTMessage(text, 'user');
-    gptInput.value = '';
+    const gptMessages = document.getElementById('gpt-messages');
+    const gptInput = document.getElementById('gpt-input');
 
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${GPT_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-5",
-        messages: [{ role: "user", content: text }]
-      })
+    async function gptSend() {
+      const text = gptInput.value.trim();
+      if (!text) return;
+      addGPTMessage(text, 'user');
+      gptInput.value = '';
+
+      try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${GPT_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-5",
+            messages: [{ role: "user", content: text }]
+          })
+        });
+
+        if (!res.ok) {
+          addGPTMessage("Chyba: Nepodarilo sa spojiť so serverom.", 'bot');
+          return;
+        }
+
+        const data = await res.json();
+        if (!data.choices || !data.choices[0].message) {
+          addGPTMessage("Chyba: žiadna odpoveď od AI.", 'bot');
+          return;
+        }
+
+        const reply = data.choices[0].message.content;
+        addGPTMessage(reply, 'bot');
+
+      } catch (err) {
+        addGPTMessage("Chyba pripojenia. Skús znova.", 'bot');
+      }
+    }
+
+    function addGPTMessage(text, who) {
+      const msg = document.createElement('div');
+      msg.className = `msg ${who}`;
+      msg.textContent = text;
+      gptMessages.appendChild(msg);
+      gptMessages.scrollTop = gptMessages.scrollHeight;
+    }
+
+    gptInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') gptSend();
     });
-
-    const data = await res.json();
-    const reply = data.choices[0].message.content;
-    addGPTMessage(reply, 'bot');
-  }
-
-  function addGPTMessage(text, who) {
-    const msg = document.createElement('div');
-    msg.className = `msg ${who}`;
-    msg.textContent = text;
-    gptMessages.appendChild(msg);
-    gptMessages.scrollTop = gptMessages.scrollHeight;
-  }
-
-  gptInput.addEventListener('keypress', e => {
-    if (e.key === 'Enter') gptSend();
-  });
-</script>
-
+  </script>
 </body>
 </html>
-
-

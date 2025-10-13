@@ -3,7 +3,7 @@ const PLANTS = [
 { id:1, name:"Levanduľa", latin:"Lavandula angustifolia", sun:"slnečné", water:"nízka", difficulty:"ľahká", tags:["aróma","včely","sucho"], note:"Strih po odkvitnutí podporí kompaktný rast." },
 { id:2, name:"Rajčiak jedlý", latin:"Solanum lycopersicum", sun:"slnečné", water:"stredná", difficulty:"stredná", tags:["plod","skleník","kolík"], note:"Odstraňuj zálistky, zlepšia sa plody aj cirkulácia vzduchu." },
 { id:3, name:"Hortenzia kríčkovitá", latin:"Hydrangea arborescens", sun:"polotieň", water:"vysoká", difficulty:"stredná", tags:["kvet","vlaha"], note:"Pôdu mulčuj – šetrí vodu a udrží stabilnú teplotu koreňov." },
-{ id:4, name:"Paprika", latin:"Capsicum annuum", sun:"slnečné", water:"stredná", difficulty:"stredná", tags:["plod","teplo"], note:"Teplomilná – von až po „zamrznutých"." },
+{ id:4, name:"Paprika", latin:"Capsicum annuum", sun:"slnečné", water:"stredná", difficulty:"stredná", tags:["plod","teplo"], note:"Teplomilná – von až po 'zamrznutých'." },
 { id:5, name:"Hosta (Funkia)", latin:"Hosta spp.", sun:"tieň", water:"stredná", difficulty:"ľahká", tags:["list","tieň"], note:"Chráň pred slizniakmi – pivo alebo mechanické pasce." },
 { id:6, name:"Mrkva siata", latin:"Daucus carota", sun:"slnečné", water:"stredná", difficulty:"ľahká", tags:["koreň","výsev"], note:"Pre rýchle klíčenie udržuj povrch stále vlhký." },
 { id:7, name:"Ruže záhonové", latin:"Rosa spp.", sun:"slnečné", water:"stredná", difficulty:"náročná", tags:["rez","kvet"], note:"Rež na vonkajší púčik, podporíš otvorenú korunu." },
@@ -72,4 +72,5 @@ const DAILY_TIPS = [
 "Pred výsadbou rajčiakov prehĺb jamky – vytvoria viac koreňov.",
 "Živiny dopĺňaj kompostom – univerzálne a šetrné k pôde.",
 "Zachytávaj dažďovú vodu – mäkká voda je ideálna na polievanie.",
+
 ];

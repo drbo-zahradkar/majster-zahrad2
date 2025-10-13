@@ -50,7 +50,6 @@
       flex: 1;
       min-width: 180px;
     }
-    /* ▼ Autocomplete box ▼ */
     .autocomplete-list {
       position: absolute;
       top: 45px;
@@ -137,24 +136,11 @@
   const autocompleteBox = document.getElementById('autocomplete');
   let plants = [];
 
-  const query = `
-    SELECT ?item ?itemLabel ?latinLabel ?image WHERE {
-  ?item wdt:P31 wd:Q16521.            # je to biologický druh
-  ?item wdt:P225 ?latinLabel.         # má latinský názov
-  OPTIONAL { ?item wdt:P18 ?image. }  # voliteľne obrázok
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "sk,en". }
-}
-LIMIT 50
-  `;
-
-  fetch("https://query.wikidata.org/sparql?query=" + encodeURIComponent(query) + "&format=json")
+  // 🪴 Backend fetch namiesto Wikidata priamo
+  fetch("http://localhost:3000/plants")
     .then(res => res.json())
     .then(data => {
-      plants = data.results.bindings.map(p => ({
-        name: p.itemLabel.value,
-        latin: p.latinLabel ? p.latinLabel.value : "—",
-        img: p.image ? p.image.value : "https://via.placeholder.com/300x200?text=Bez+obrázka",
-      }));
+      plants = data;
       renderPlants(plants);
     })
     .catch(err => {
@@ -229,4 +215,3 @@ LIMIT 50
 </script>
 </body>
 </html>
-

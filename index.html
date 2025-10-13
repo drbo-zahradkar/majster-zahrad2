@@ -78,5 +78,56 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
+<!-- GPT Chat Widget -->
+<div id="gpt-box">
+  <div id="gpt-messages"></div>
+  <div>
+    <input id="gpt-input" type="text" placeholder="Napíš niečo...">
+    <button onclick="gptSend()">→</button>
+  </div>
+</div>
+
+<script>
+  const GPT_API_KEY = "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"; // svoj API key sem
+  const gptMessages = document.getElementById('gpt-messages');
+  const gptInput = document.getElementById('gpt-input');
+
+  async function gptSend() {
+    const text = gptInput.value.trim();
+    if (!text) return;
+    addGPTMessage(text, 'user');
+    gptInput.value = '';
+
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${GPT_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-5",
+        messages: [{ role: "user", content: text }]
+      })
+    });
+
+    const data = await res.json();
+    const reply = data.choices[0].message.content;
+    addGPTMessage(reply, 'bot');
+  }
+
+  function addGPTMessage(text, who) {
+    const msg = document.createElement('div');
+    msg.className = `msg ${who}`;
+    msg.textContent = text;
+    gptMessages.appendChild(msg);
+    gptMessages.scrollTop = gptMessages.scrollHeight;
+  }
+
+  gptInput.addEventListener('keypress', e => {
+    if (e.key === 'Enter') gptSend();
+  });
+</script>
+
 </body>
 </html>
+

@@ -74,6 +74,27 @@
     .autocomplete-item:hover {
       background: #f0f0f0;
     }
+
+    /* ===== Sezónne tipy ===== */
+    .season-box {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 25px;
+    }
+    .season-selector button {
+      margin: 5px;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      background: #dff0d8;
+      cursor: pointer;
+    }
+    .season-selector button.active {
+      background: #9fd89f;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body data-page="plants">
@@ -93,6 +114,18 @@
 </header>
 
 <main class="container">
+  <!-- ✅ Pridané sezónne tipy -->
+  <section class="season-box">
+    <h2>🌿 Sezónne tipy</h2>
+    <div class="season-selector">
+      <button data-season="jar">Jar</button>
+      <button data-season="leto">Leto</button>
+      <button data-season="jesen">Jeseň</button>
+      <button data-season="zima">Zima</button>
+    </div>
+    <div id="seasonContent"></div>
+  </section>
+
   <header class="page-head">
     <h1>Encyklopédia rastlín</h1>
     <p>Vyhľadávaj rastliny podľa názvu alebo latinského mena. Dáta pochádzajú z Trefle API.</p>
@@ -145,7 +178,6 @@
   async function searchPlants(q) {
     try {
       const res = await fetch(`https://proxy-pre-zahradkara-drba.onrender.com/plants?q=${q}`);
-
       const data = await res.json();
       plants = data.data.map(p => ({
         name: p.common_name || "Neznáma rastlina",
@@ -220,8 +252,53 @@
     list.innerHTML = '<p>Zadaj názov rastliny 🌿</p>';
     plants = [];
   });
+
+  // ===== Sezónne tipy =====
+  const tips = {
+    jar: [
+      "Sadiť zemiaky, mrkvu, cibuľu a hrášok.",
+      "Presádzať trvalky a bylinky.",
+      "Prerezávať stromy a kríky po zime.",
+      "Predpestovať rajčiny a papriku."
+    ],
+    leto: [
+      "Zalievať skoro ráno alebo večer.",
+      "Zberať ovocie, bylinky a zeleninu.",
+      "Zastrihávať odkvitnuté kvety.",
+      "Chrániť rastliny pred škodcami."
+    ],
+    jesen: [
+      "Zbierať úrodu a zakladať kompost.",
+      "Sadiť cesnak a cibuľu na jar.",
+      "Upratať záhony.",
+      "Zazimovať citlivé rastliny."
+    ],
+    zima: [
+      "Plánovať výsadbu na jar.",
+      "Čistiť a opravovať náradie.",
+      "Kontrolovať uskladnenú úrodu.",
+      "Starať sa o izbové rastliny."
+    ]
+  };
+
+  const seasonContent = document.getElementById('seasonContent');
+  const seasonButtons = document.querySelectorAll('.season-selector button');
+
+  function setSeason(season) {
+    seasonButtons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-season="${season}"]`).classList.add('active');
+    seasonContent.innerHTML = `<ul>${tips[season].map(t => `<li>${t}</li>`).join('')}</ul>`;
+  }
+
+  const month = new Date().getMonth();
+  if (month >= 2 && month <= 4) setSeason('jar');
+  else if (month >= 5 && month <= 7) setSeason('leto');
+  else if (month >= 8 && month <= 10) setSeason('jesen');
+  else setSeason('zima');
+
+  seasonButtons.forEach(btn => {
+    btn.addEventListener('click', () => setSeason(btn.dataset.season));
+  });
 </script>
 </body>
 </html>
-
-

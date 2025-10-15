@@ -144,7 +144,7 @@
 
   async function searchPlants(q) {
     try {
-      const res = await fetch(`https://trefle.io/api/v1/plants/search?token=${TOKEN}&q=${encodeURIComponent(q)}`);
+      const res = await fetch(`/plants?q=${q}`);
       const data = await res.json();
       plants = data.data.map(p => ({
         name: p.common_name || "Neznáma rastlina",
@@ -222,3 +222,4 @@
 </script>
 </body>
 </html>
+

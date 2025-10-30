@@ -24,11 +24,11 @@
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const name = params.get("name");
+const latin = params.get("latin");
 
 async function loadPlant() {
   try {
-    const res = await fetch(`https://proxy-pre-zahradkara-drba.onrender.com/plants?q=${name}`);
+    const res = await fetch(`https://proxy-pre-zahradkara-drba.onrender.com/plants?q=${latin}`);
     const data = await res.json();
     const p = data.data && data.data[0];
 

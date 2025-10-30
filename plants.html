@@ -211,8 +211,8 @@
     `;
 
     card.addEventListener('click', () => {
-      window.location.href = `./plant.html?id=${plant.id}`;
-    });
+  window.location.href = `plant.html?name=${encodeURIComponent(plant.name)}`;
+});
 
     list.appendChild(card);
   });
@@ -311,6 +311,7 @@
 </script>
 </body>
 </html>
+
 
 
 

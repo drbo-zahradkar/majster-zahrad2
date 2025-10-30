@@ -38,12 +38,15 @@ async function loadPlant() {
     }
 
     document.getElementById("plantDetail").innerHTML = `
-      <h1>${p.common_name || "Neznáma rastlina"}</h1>
-      <h3><i>${p.scientific_name || ""}</i></h3>
-      <img src="${p.image_url || "https://placehold.co/400x300?text=Bez+obrazka"}">
-      <p><strong>Rodina:</strong> ${p.family || "?"}</p>
-      <p>${p.observations || "Žiadne informácie."}</p>
-    `;
+  <h1>${p.common_name || "Neznáma rastlina"}</h1>
+  <h3><i>${p.scientific_name || ""}</i></h3>
+  <img src="${p.image_url || "https://placehold.co/400x300?text=Bez+obrazka"}" alt="${p.common_name}">
+  
+  <p><strong>Rodina:</strong> ${p.family || "Nie je uvedená"}</p>
+  <p><strong>Popis:</strong> ${p.observations || "Táto rastlina nemá pridaný popis."}</p>
+  <p><strong>Pôvod:</strong> ${p.native_status || "Neznámy"}</p>
+  <p><strong>Dostupné údaje:</strong> Trefle API poskytlo obmedzené informácie.</p>
+`;
   } catch (err) {
     document.getElementById("plantDetail").innerHTML = "<p>Chyba pri načítaní údajov.</p>";
   }

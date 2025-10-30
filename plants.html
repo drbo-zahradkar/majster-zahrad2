@@ -180,6 +180,7 @@
       const res = await fetch(`https://proxy-pre-zahradkara-drba.onrender.com/plants?q=${q}`);
       const data = await res.json();
       plants = data.data.map(p => ({
+        id: p.id,
         name: p.common_name || "Neznáma rastlina",
         latin: p.scientific_name || "—",
         img: p.image_url || "https://via.placeholder.com/300x200?text=Bez+obrázka"
@@ -193,22 +194,30 @@
   }
 
   function renderPlants(data) {
-    list.innerHTML = '';
-    if (data.length === 0) {
-      list.innerHTML = '<p>Nenašli sa žiadne rastliny.</p>';
-      return;
-    }
-    data.forEach(plant => {
-      const card = document.createElement('div');
-      card.className = 'plant-card';
-      card.innerHTML = `
-        <img src="${plant.img}" alt="${plant.name}">
-        <h3>${plant.name}</h3>
-        <div class="latin">${plant.latin}</div>
-      `;
-      list.appendChild(card);
-    });
+  list.innerHTML = '';
+  if (data.length === 0) {
+    list.innerHTML = '<p>Nenašli sa žiadne rastliny.</p>';
+    return;
   }
+  data.forEach(plant => {
+    const card = document.createElement('div');
+    card.className = 'plant-card';
+    card.dataset.id = plant.id;
+
+    card.innerHTML = `
+      <img src="${plant.img}" alt="${plant.name}">
+      <h3>${plant.name}</h3>
+      <div class="latin">${plant.latin}</div>
+    `;
+
+    card.addEventListener('click', () => {
+      window.location.href = \`plant.html?id=\${plant.id}\`;
+    });
+
+    list.appendChild(card);
+  });
+}
+
 
   function showAutocomplete(suggestions) {
     if (suggestions.length === 0) {
@@ -302,3 +311,4 @@
 </script>
 </body>
 </html>
+

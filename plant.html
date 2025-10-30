@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <title>Detail rastliny</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    body { background: #f8f8f8; }
+    .plant-detail {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 40px auto;
+    }
+    .plant-detail img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body class="container">
+<a href="plants.html">← Späť na encyklopédiu</a>
+<div id="plantDetail" class="plant-detail"><p>Načítavam údaje o rastline...</p></div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  async function loadPlant() {
+    try {
+      const res = await fetch(`https://proxy-pre-zahradkara-drba.onrender.com/plants/${id}`);
+      const data = await res.json();
+      const p = data.data;
+
+      document.getElementById("plantDetail").innerHTML = `
+        <h1>${p.common_name || "Neznáma rastlina"}</h1>
+        <h3><i>${p.scientific_name || ""}</i></h3>
+        <img src="${p.image_url || "https://via.placeholder.com/400x300"}" alt="${p.common_name}">
+        <p><strong>Rodina:</strong> ${p.family || "?"}</p>
+        <p><strong>Popis:</strong> ${p.observations || "Žiadne informácie"}</p>
+      `;
+    } catch (err) {
+      document.getElementById("plantDetail").innerHTML = "<p>Chyba pri načítaní detailu rastliny.</p>";
+      console.error(err);
+    }
+  }
+
+  loadPlant();
+</script>
+</body>
+</html>
